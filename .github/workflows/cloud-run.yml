@@ -51,19 +51,19 @@ jobs:
       id: init
       run: terraform init
       continue-on-error: false
-      working-directory: ./istudio-tf-scripts
+      working-directory: istudio-tf-scripts
       
     - name: Terraform Refresh
       id: refresh
       run: terraform refresh
       continue-on-error: false
-      working-directory: ./infrastructure-tf
+      working-directory: infrastructure-tf
       
     - name: Terraform Plan
       id: plan
       run: terraform plan
       continue-on-error: false
-      working-directory: ./istudio-tf-scripts
+      working-directory: istudio-tf-scripts
     
     # Deploy image to Cloud Run
     - name: Deploy
