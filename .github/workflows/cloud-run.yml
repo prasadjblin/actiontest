@@ -1,6 +1,5 @@
 name: Build and Deploy to Cloud Run
 
-
 on:
   push:
     branches:
@@ -34,7 +33,7 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
-    # Setup terraform
+    # Setup terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
     
@@ -45,7 +44,7 @@ jobs:
         repository: prasadjblin/tf-store
         path: istudio-tf-scripts        
         ssh-strict: false
-        #ssh-key: ${{ secrets.CWEB_MGMT_SSH }}
+        #ssh-key: ${{ secrets.MGMT_SSH }}
     
     - name: Terraform init
       id: init
@@ -87,9 +86,6 @@ jobs:
       with:
         # Check the following URLs one by one sequentially
         url: https://helloworld-python-5pwvjfrcgq-uc.a.run.app
-        # Follow redirects, or just report success on 3xx status codes
         follow-redirect: no # Optional, defaults to "no"
-        # Fail this action after this many failed attempts
         max-attempts: 3 # Optional, defaults to 1
-        # Delay between retries
         retry-delay: 5s # Optional, only applicable to max-attempts > 1
