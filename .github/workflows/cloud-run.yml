@@ -33,17 +33,32 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+    
     # Setup terraform
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+    
     # Terraform script checkout
     - name: Terraform repository checkout 
       uses: actions/checkout@v2
       with:
         repository: prasadjblin/tf-store
-        path: istudio-tf-scripts
+        path: istudio-tf-scripts        
+        ssh-strict: false
         #ssh-key: ${{ secrets.CWEB_MGMT_SSH }}
-        #ssh-strict: false
+    
+    - name: Terraform init
+      id: init
+      run: terraform init
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      
+    - name: Terraform Refresh
+      id: refresh
+      run: terraform refresh
+      continue-on-error: false
+      working-directory: ./infrastructure-tf
+      
     - name: Terraform Plan
       id: plan
       run: terraform plan
