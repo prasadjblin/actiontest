@@ -55,10 +55,6 @@ jobs:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
       
-    - name: current directory
-      id: pwd
-      run: echo $PWD/istudio-tf-scripts
-      
     - name: Terraform Refresh
       id: refresh
       run: terraform refresh
@@ -84,6 +80,7 @@ jobs:
           --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
           --platform "managed" \
           --allow-unauthenticated
+    
     #check service availability       
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v1.2
