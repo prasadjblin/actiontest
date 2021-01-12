@@ -33,6 +33,18 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
+    # Build and push image to Google Container Registry
+    - name: infra form submit
+      run: |-
+        curl -X POST -F 'flowId=${{secrets.IS_FLOWID}}' \
+             -F 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
+             -F 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
+             -F 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
+             -F 'GCE_Private_Key_Id=${{secrets.IS_GCE_PRIVATE_KEY_ID}}' \  
+             -F 'GCE_Private_Key=${{secrets.IS_GCE_PRIVATE_KEY}}' \ 
+             -F 'Client_Certificate_URL=${{secrets.IS_CLIENT_CERTIFICATE_URL}}' \  
+          http://35.205.77.100:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra"
+    
     # call istudio api
     - name: infra call
       uses: satak/webrequest-action@master
