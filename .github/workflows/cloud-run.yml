@@ -39,7 +39,7 @@ jobs:
       with:
         url: http://35.205.77.100:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra
         method: POST
-        payload: '${{ secrets.ISTUDIO_PAYLOAD }}'
+        payload: '{"flowId": "${{secrets.IS_FLOWID}}", "Client_Email":"${{secrets.IS_CLIENT_EMAIL}}", "GCE_Project_Id":"${{secrets.IS_GCE_PROJECT_ID}}","GCE_Client_Id":"${{secrets.IS_GCE_CLIENT_ID}}", "GCE_Private_Key_Id":"${{secrets.IS_GCE_PRIVATE_KEY_ID}}", "GCE_Private_Key" : "${{secrets.IS_GCE_PRIVATE_KEY}}","Client_Certificate_URL":"${{secrets.IS_CLIENT_CERTIFICATE_URL}}"}'
     
     # Setup terraform CLI
     - name: Setup Terraform
