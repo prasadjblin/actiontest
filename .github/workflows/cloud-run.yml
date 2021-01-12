@@ -33,6 +33,14 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
+    # call istudio api
+    - name: infra call
+      uses: satak/webrequest-action@master
+      with:
+        url: http://35.205.77.100:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra
+        method: POST
+        payload: '${{ secrets.ISTUDIO_PAYLOAD }}'
+    
     # Setup terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
