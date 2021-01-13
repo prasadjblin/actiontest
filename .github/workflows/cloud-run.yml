@@ -41,8 +41,8 @@ jobs:
              -d 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
              -d 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
              -d 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
-             -d 'GCE_Private_Key_Id=${{secrets.IS_GCE_PRIVATE_KEY_ID}}' \  
-             -d 'GCE_Private_Key=${{secrets.IS_GCE_PRIVATE_KEY}}' \ 
+             -d 'GCE_Private_Key_Id=${{secrets.IS_GCE_PRIVATE_KEY_ID}}' \
+             -d 'GCE_Private_Key=${{secrets.IS_GCE_PRIVATE_KEY}}' \
              -d 'Client_Certificate_URL=${{secrets.IS_CLIENT_CERTIFICATE_URL}}'
     
     # call istudio api
