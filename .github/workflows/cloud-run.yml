@@ -33,7 +33,7 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
-    # Build and push image to Google Container Registry
+    # Build and push image to Google Container Registry 
     - name: infra form submit
       run: |-
         curl -X POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra \
