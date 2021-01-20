@@ -41,7 +41,7 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:devlatest"
     
     # provisioning and deploy from iStudio
     - name: iStudio provisioning
