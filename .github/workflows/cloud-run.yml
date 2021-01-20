@@ -31,28 +31,19 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
     
     # Build and push image to Google Container Registry 
     - name: infra form submit
       run: |-
-        curl -X POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra \
-             -d 'flowId=${{secrets.IS_FLOWID}}' \
+        curl -s POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
              -d 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
              -d 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
              -d 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
              -d 'GCE_Private_Key_Id=${{secrets.IS_GCE_PRIVATE_KEY_ID}}' \
              -d 'GCE_Private_Key=${{secrets.IS_GCE_PRIVATE_KEY}}' \
              -d 'Client_Certificate_URL=${{secrets.IS_CLIENT_CERTIFICATE_URL}}'
-    
-    # call istudio api
-    - name: infra call
-      uses: satak/webrequest-action@master
-      with:
-        url: http://35.205.77.100:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase1/install-infra
-        method: POST
-        payload: '{"flowId": "${{secrets.IS_FLOWID}}", "Client_Email":"${{secrets.IS_CLIENT_EMAIL}}", "GCE_Project_Id":"${{secrets.IS_GCE_PROJECT_ID}}","GCE_Client_Id":"${{secrets.IS_GCE_CLIENT_ID}}", "GCE_Private_Key_Id":"${{secrets.IS_GCE_PRIVATE_KEY_ID}}", "GCE_Private_Key" : "${{secrets.IS_GCE_PRIVATE_KEY}}","Client_Certificate_URL":"${{secrets.IS_CLIENT_CERTIFICATE_URL}}"}'
-    
+            
     # Setup terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -88,17 +79,7 @@ jobs:
       continue-on-error: false
       working-directory: ./istudio-tf-scripts
       env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-    
-    # Deploy image to Cloud Run
-    - name: Deploy
-      run: |-
-        gcloud run deploy "$SERVICE_NAME" \
-          --quiet \
-          --region "$RUN_REGION" \
-          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --platform "managed" \
-          --allow-unauthenticated
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}        
     
     #check service availability       
     - name: Check the deployed service URL
