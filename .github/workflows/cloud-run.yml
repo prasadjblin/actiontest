@@ -36,7 +36,7 @@ jobs:
     # Build and push image to Google Container Registry 
     - name: infra form submit
       run: |-
-        curl -s POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
+        curl -X --silent POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
              -d 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
              -d 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
              -d 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
