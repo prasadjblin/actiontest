@@ -43,7 +43,7 @@ jobs:
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
     
-    # Build and push image to Google Container Registry 
+    # Build and push image to Google Container Registry  
     - name: iStudio provisioning
       continue-on-error: false
       run: |-
