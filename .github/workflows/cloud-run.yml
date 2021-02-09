@@ -27,6 +27,7 @@ jobs:
       with:
         source_file: '*.py'
         destination_repo: 'prasadjblin/tf-store'
+        destination_branch: 'main'
         user_email: 'prasadjblin@gmail.com'
         user_name: 'prasadjblin'
         commit_message: 'A custom message for the commit by prasadjblin'
