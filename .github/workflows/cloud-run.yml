@@ -20,6 +20,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: Pushes test file
+      uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: '*.py'
+        destination_repo: 'prasadjblin/tf-store'
+        user_email: 'prasadjblin@gmail.com'
+        user_name: 'prasadjblin'
+        commit_message: 'A custom message for the commit by prasadjblin'
+    
     - name: Setting GCP Reference
       run: echo "GCP_REF=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
