@@ -75,14 +75,6 @@ jobs:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-    - name: Terraform Refresh
-      id: refresh
-      run: terraform refresh
-      continue-on-error: false
-      working-directory: ./istudio-tf-scripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-
     - name: Terraform Plan
       id: plan
       run: terraform plan
