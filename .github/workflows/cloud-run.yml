@@ -54,12 +54,56 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:devlatest3"
+    #Terraform remote state GCS
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    
+    # Terraform script checkout 
+    - name: Terraform repository checkout 
+      uses: actions/checkout@v2
+      with:
+        repository: prasadjblin/tf-store
+        path: istudio-tf-scripts        
+        ssh-strict: false
+        #ssh-key: ${{ secrets.MGMT_SSH }}
+
+    - name: Terraform init
+      id: init
+      run: terraform init
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Refresh
+      id: refresh
+      run: terraform refresh
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
+    
+    - name: Terraform apply
+      id: apply
+      run: terraform apply -auto-approve
+      continue-on-error: false
+      working-directory: ./istudio-tf-scripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }} 
     
     # provisioning and deploy from iStudio
     - name: iStudio provisioning
       continue-on-error: false
       run: |-
-        curl -X POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
+        curl -X POST http://istudio.thecloudbridge.net:5000/InfraCommand23/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
              -d 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
              -d 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
              -d 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
