@@ -32,15 +32,20 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:devlatest4"
     
-    - name: Deploy
+    # provisioning and deploy from iStudio
+    - name: iStudio provisioning
+      continue-on-error: false
       run: |-
-        gcloud run deploy "$SERVICE_NAME" \
-          --quiet \
-          --region "$RUN_REGION" \
-          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" --platform "managed" --allow-unauthenticated  
-   
+        curl -X POST http://istudio.thecloudbridge.net:5000/InfraCommand/acemicro@hcl.com/GCP/IkeaTrial/usecase2/install-infra \
+             -d 'Client_Email=${{secrets.IS_CLIENT_EMAIL}}' \
+             -d 'GCE_Project_Id=${{secrets.IS_GCE_PROJECT_ID}}' \
+             -d 'GCE_Client_Id=${{secrets.IS_GCE_CLIENT_ID}}' \
+             -d 'GCE_Private_Key_Id=${{secrets.IS_GCE_PRIVATE_KEY_ID}}' \
+             -d 'GCE_Private_Key=${{secrets.IS_GCE_PRIVATE_KEY}}' \
+             -d 'Client_Certificate_URL=${{secrets.IS_CLIENT_CERTIFICATE_URL}}'	
+    
     #check service availability       
     - name: Check the deployed service URL
       uses: jtalk/url-health-check-action@v1.2
