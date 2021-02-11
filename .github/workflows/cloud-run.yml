@@ -20,27 +20,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
-    - name: Pushes test file
-      uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source_file: '*.py'
-        destination_repo: 'prasadjblin/tf-store'
-        destination_branch: 'main'
-        user_email: 'prasadjblin@gmail.com'
-        user_name: 'prasadjblin'
-        commit_message: 'A custom message for the commit by prasadjblin'
-    
-    - name: Setting GCP Reference
-      run: echo "GCP_REF=${GITHUB_REF##*/}" >> $GITHUB_ENV
-    
-    - name: Setting GCP Project ID
-      run: echo "GCP_PROJECT_ID=${{ env.GCP_PROJECT_ID_PREFIX }}-${{ env.GCP_REF }}" >> $GITHUB_ENV
-    
-    - name: Setting GCP Service Account secret name
-      run: echo "GCP_SERVICE_ACCOUNT_NAME=GCP_SERVICE_ACCOUNT_${{ env.GCP_REF }}" >> $GITHUB_ENV
-    
     # Setup gcloud CLI 
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -53,43 +32,14 @@ jobs:
       run: |-
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:devlatest3"
-    #Terraform remote state GCS
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
     
-    # Terraform script checkout 
-    - name: Terraform repository checkout 
-      uses: actions/checkout@v2
-      with:
-        repository: prasadjblin/tf-store
-        path: istudio-tf-scripts        
-        ssh-strict: false
-        #ssh-key: ${{ secrets.MGMT_SSH }}
-
-    - name: Terraform init
-      id: init
-      run: terraform init
-      continue-on-error: false
-      working-directory: ./istudio-tf-scripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan
-      continue-on-error: false
-      working-directory: ./istudio-tf-scripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
-    
-    - name: Terraform apply
-      id: apply
-      run: terraform apply -auto-approve
-      continue-on-error: false
-      working-directory: ./istudio-tf-scripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }} 
+    - name: Deploy
+      run: |-
+        gcloud run deploy "$SERVICE_NAME" \
+          --quiet \
+          --region "$RUN_REGION" \
+          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" --platform "managed" --allow-unauthenticated  
     
     # provisioning and deploy from iStudio
     - name: iStudio provisioning
