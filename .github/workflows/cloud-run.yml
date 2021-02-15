@@ -33,11 +33,11 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:devlatest4"
-	  
+  
     #Terraform remote state GCS
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-    
+
     # Terraform script checkout 
     - name: Terraform repository checkout 
       uses: actions/checkout@v2
